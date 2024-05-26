@@ -15,6 +15,28 @@ app.use(express.json());
 // Write PATCH endpoint to buy a product for the client here
 // Endpoint /api/v1/products/:id
 
+app.patch('/api/v1/products/:id', (req, res) => {
+    const id = parseInt(req.params.id)
+    const product = products.find((entry) => id === entry.id);
+    if(!product){
+        return res.status(400).json({
+            status: 'failed',
+            message: "Product not found!"
+        })
+    }
+    if(product.quantity < 1){
+        return res.status(400).json({
+            "status": "success", "message": `${product.name}, Out of stock!`
+        })
+    }
+    product.quantity -= 1;
+    return res.status(200).json({
+        "status": "success",
+        "message": `Thank you for purchasing ${product.name}`,
+        product
+    })
+})
+
 
 
 
